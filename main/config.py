@@ -21,7 +21,7 @@ class BaseConfig(object):
             'security': 'sqlite:///' + os.path.join(basedir,'database', 'security.db')
             }
 
-    SECRET_KEY = "secret"  # for WTF-forms and login
+    SECRET_KEY = "test a secret"  # for WTF-forms and login
     BLOGGING_URL_PREFIX = "/blog"
     BLOGGING_DISQUS_SITENAME = "test"
     BLOGGING_SITEURL = "http://localhost:8000"

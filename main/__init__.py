@@ -5,49 +5,37 @@ from utils import get_instance_folder_path
 from flask import Flask, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-from flask.ext.login import UserMixin, LoginManager, login_user, logout_user
 from flask.ext.blogging import SQLAStorage, BloggingEngine
 
+# create the application
 app = Flask(__name__)
 
-
+# configure the application
 configure_app(app)
 
-# extensions
+# start the database 
 db = SQLAlchemy(app)
-storage = SQLAStorage(db=db)
 
+# configure the security
+from security import security, configure_security
+
+configure_security()
+
+# blogging extention
+storage = SQLAStorage(db=db)
+blog_engine = BloggingEngine(app, storage)
 db.create_all(bind=['blog'])
 
-blog_engine = BloggingEngine(app, storage)
-login_manager = LoginManager(app)
-#meta.create_all(bind=engine)
 
+# execute before first request is processed
+@app.before_first_request
+def before_first_request():
+    pass
 
-# user class for providing authentication
-class User(UserMixin):
-    def __init__(self, user_id):
-        self.id = user_id
-
-    def get_name(self):
-        return "kirk"  # typically the user's name
-
-@login_manager.user_loader
-@blog_engine.user_loader
-def load_user(user_id):
-    return User(user_id)
-
-@app.route("/")
-def index():
+# Views
+@app.route('/')
+@login_required
+def home():
     return render_template('index.html')
 
-@app.route("/login/")
-def login():
-    user = User("testuser")
-    login_user(user)
-    return redirect("/blog")
 
-@app.route("/logout/")
-def logout():
-    logout_user()
-    return redirect("/")
