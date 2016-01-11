@@ -12,7 +12,7 @@ class BaseConfig(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    #SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(basedir,'database', 'wordnet-31.db')
+    #SQLALCHEMY_DATABASE_URI
 
     SQLALCHEMY_ENGINE = 'sqlite://'
 
@@ -25,6 +25,10 @@ class BaseConfig(object):
     BLOGGING_URL_PREFIX = "/blog"
     BLOGGING_DISQUS_SITENAME = "test"
     BLOGGING_SITEURL = "http://localhost:8000"
+    
+    #flask-security
+    SECURITY_PASSWORD_HASH = "sha512_crypt"
+    SECURITY_PASSWORD_SALT = "salty"
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True    
