@@ -50,7 +50,6 @@ def configure_security():
     # Create two Users for testing purposes -- unless they already exists.
     # In each case, use Flask-Security utility function to encrypt the password.
     pw = encrypt_password('password')
-    print("password",pw)
     if not user_datastore.get_user('someone@example.com'):
         user_datastore.create_user(email='someone@example.com', password=pw)
     if not user_datastore.get_user('admin@example.com'):

@@ -1,13 +1,13 @@
 
 from config import configure_app
-from utils import get_instance_folder_path
+#from utils import get_instance_folder_path
 
 from flask import Flask, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 
 from flask.ext.security import login_required
 
-from flask.ext.blogging import SQLAStorage, BloggingEngine
+#from flask.ext.blogging import SQLAStorage, BloggingEngine
 
 # create the application
 app = Flask(__name__)
@@ -21,18 +21,17 @@ db = SQLAlchemy(app)
 # configure the security
 from security import security, configure_security
 
-#configure_security()
+from util import list_routes
 
 # blogging extention
-storage = SQLAStorage(db=db)
-blog_engine = BloggingEngine(app, storage)
-db.create_all(bind=['blog'])
+from blogging import blogging_engine, configure_blogging
 
 
 # execute before first request is processed
 @app.before_first_request
 def before_first_request():
     configure_security()
+    configure_blogging()
     pass
 
 # Views
@@ -40,5 +39,7 @@ def before_first_request():
 @login_required
 def home():
     return render_template('index.html')
+
+
 
 
