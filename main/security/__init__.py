@@ -33,8 +33,10 @@ class User(db.Model, UserMixin):
             secondary='roles_users', 
             backref=db.backref('users',lazy='dynamic'))
 
+    def get_name(self):
+        return self.email
 
-    # Setup Flask-Security
+# Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
