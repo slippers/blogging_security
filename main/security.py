@@ -1,13 +1,14 @@
 from main import app, db
-
 from flask.ext.security import Security, SQLAlchemyUserDatastore, \
-        UserMixin, RoleMixin
-
+        UserMixin, RoleMixin, login_required, roles_accepted
 from flask_security.utils import encrypt_password
+
+from flask_login import current_user
 
 # Define models
 
 class RoleUsers(db.Model):
+    # save table to security database
     __bind_key__ = 'security'
     __tablename__ = 'roles_users'
     id = db.Column(db.Integer(), primary_key=True)
@@ -32,7 +33,8 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', 
             secondary='roles_users', 
             backref=db.backref('users',lazy='dynamic'))
-
+    
+    # used by flask-blogging to get name to display on post
     def get_name(self):
         return self.email
 
@@ -52,6 +54,7 @@ def configure_security():
     # Create two Users for testing purposes -- unless they already exists.
     # In each case, use Flask-Security utility function to encrypt the password.
     pw = encrypt_password('password')
+#    pw = 'password'
     if not user_datastore.get_user('someone@example.com'):
         user_datastore.create_user(email='someone@example.com', password=pw)
     if not user_datastore.get_user('admin@example.com'):
@@ -65,6 +68,4 @@ def configure_security():
     user_datastore.add_role_to_user('admin@example.com', 'admin')
 
     db.session.commit()
-
-
 

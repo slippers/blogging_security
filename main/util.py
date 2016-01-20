@@ -1,8 +1,9 @@
-from flask import url_for
-from main import app
+import logging
+from flask import url_for, jsonify
 import urllib
 
-def list_routes():
+def list_routes(app):
+    app.logger.info('list_routes')
     output = []
     for rule in app.url_map.iter_rules():
         options = {}
@@ -16,3 +17,18 @@ def list_routes():
 
     for line in sorted(output):
         print line
+
+
+class InvalidUsage(Exception):
+    status_code = 400
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+            self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv

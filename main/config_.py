@@ -4,6 +4,9 @@ class BaseConfig(object):
     # directory above configure 
     basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
+    def getBaseDir(self):
+        print("basedir:", basedir)
+
     # configuration
     DEBUG = False
     TESTING = False
@@ -21,17 +24,15 @@ class BaseConfig(object):
             'security': 'sqlite:///' + os.path.join(basedir,'database', 'security.db')
             }
 
-
-    # flask-blogging
     SECRET_KEY = "test a secret"  # for WTF-forms and login
     BLOGGING_URL_PREFIX = "/blog"
     BLOGGING_DISQUS_SITENAME = "test"
     BLOGGING_SITEURL = "http://localhost:8000"
-    
-    # flask-security
+
+    #flask-security
     SECURITY_PASSWORD_HASH = "sha512_crypt"
     SECURITY_PASSWORD_SALT = "salty"
-
+    
 class DevelopmentConfig(BaseConfig):
     DEBUG = True    
     TESTING = True
@@ -57,3 +58,4 @@ def configure_app(app):
     if config_name == 'default':
         for key,value in app.config.items():
             print(key,value)
+
